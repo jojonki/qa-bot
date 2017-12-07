@@ -2,20 +2,37 @@ bye_words = ['bye', 'good bye', 'see you']
 chg_topic = ['change topic', 'other topic', 'do you know anything else']
 
 
-class DBRetriever():
+class QAModel():
+    # dummy
     def __init__(self):
         pass
 
-    def search_topic_by_uttr(self, user_uttr):
-        return "iPod"
+    def get_answer(self, paragraph, question):
+        answer = 'Apple Inc.' # dummy
+        return answer
 
-    def search_topic_by_title(self, topic_title):
-        pass
+
+class DBRetriever():
+    def __init__(self):
+        self.crnt_topic = None
+
+    def search_topic_by_uttr(self, user_uttr):
+        # find articles with user uttr from SQuAD...
+        title = 'iPod' # dummy
+        self.crnt_topic = title
+        return title
+
+    def search_paragraph(self, user_uttr):
+        # find a specific paragraph which may be related to a user question
+        # ex) 'who made iPod touch?'
+        paragraph = 'iPod was invented by Apple inc in 1998. For two years ago, they...' # dummy
+        return paragraph
 
 
 class DialogManager():
     def __init__(self):
         self.db_retr = DBRetriever()
+        self.model = QAModel()
 
     def get_action(self, uttr, in_topic):
         sys_uttr = "I'm sorry. I cannot understand what you said"
@@ -29,7 +46,12 @@ class DialogManager():
             topic_end = True
         else:
             if in_topic:
-                pass
+                paragraph = self.db_retr.search_topic_by_uttr(uttr)
+                if paragraph is None:
+                    sys_uttr = "Hmmm... I don't know that. I will check it later.\nDo you have other questions?"
+                else:
+                    answer = self.model.get_answer(paragraph, question=uttr)
+                    sys_uttr = "I'd say \"{}\"".format(answer)
             else:
                 # try to retrieve a topic what user said
                 topic = self.db_retr.search_topic_by_uttr(uttr)
