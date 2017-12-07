@@ -1,4 +1,5 @@
 bye_words = ['bye', 'good bye', 'see you']
+chg_topic = ['change topic', 'other topic', 'do you know anything else']
 
 
 class DBRetriever():
@@ -21,7 +22,11 @@ class DialogManager():
         topic_end = False
         dlg_end = False
         if uttr in bye_words:
-            return 'Bye', True
+            sys_uttr = "Bye. Have a nice day!"
+            dlg_end = True
+        elif uttr in chg_topic:
+            sys_uttr = "Sure. What kind of topic do you want to talk about?"
+            topic_end = True
         else:
             if in_topic:
                 pass
